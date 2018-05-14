@@ -28,5 +28,15 @@ func (url *Url) Upsert() error {
 }
 func (url *Url) DeleteById() error {
 	return GetDB().C(UrlCollection).Remove(bson.M{"_id": url.Id})
-
+}
+func (url *Url) GenId() error {
+	sourceUrl := url.SourceUrl
+	err := GetDB().C(UrlCollection).Find(bson.M{"SourceUrl": sourceUrl}).One(url)
+	if err != nil {
+		url.Id, err = IncrMaxId("url")
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

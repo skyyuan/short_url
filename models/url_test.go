@@ -39,3 +39,13 @@ func TestMDB(t *testing.T) {
 	err = url.DeleteById()
 	assert.Nil(t, err)
 }
+
+func TestUrl_GenId(t *testing.T) {
+	url := &Url{}
+	url.SourceUrl = "http://www.facebook_2.com"
+	err := url.GenId()
+	assert.Nil(t, err)
+
+	err = url.Insert()
+	assert.Nil(t, err)
+}
