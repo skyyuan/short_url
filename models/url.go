@@ -10,6 +10,9 @@ type Url struct {
 
 var UrlCollection = "url"
 
+func (url *Url) Save() error {
+	return url.Upsert()
+}
 func (url *Url) Insert() error {
 	return GetDB().C(UrlCollection).Insert(url)
 }

@@ -6,25 +6,21 @@ import (
 	"net/http"
 	"fmt"
 	"short_url/lib/mux"
-	"github.com/astaxie/beego"
-	"short_url/controllers"
 )
 
 var port string
 
-func main() {
+func init() {
 	flag.StringVar(&port, "port", ":8080", "port to listen")
 	flag.Parse()
+}
 
-	beego.RESTRouter("/api/url", &controllers.UrlController{})
+func main() {
 
-	beego.Router("/*", &controllers.RedirectController{})
-
-	beego.Run(port)
 }
 
 func myRouter() {
-	router := mux.NewMuxHandler()
+	router := mux.NewMux()
 	router.Handle("/hello/golang/", &BaseHandler{})
 	router.HandleFunc("/hello/world", func(resp http.ResponseWriter, req *http.Request) {
 		resp.Write([]byte("Hello World"))

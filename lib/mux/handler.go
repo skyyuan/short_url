@@ -2,21 +2,19 @@ package mux
 
 import "net/http"
 
-type muxHandler struct {
+type mux struct {
 	handlers    map[string]http.Handler
 	handleFuncs map[string]func(resp http.ResponseWriter, req *http.Request)
 }
 
-func NewMuxHandler() *muxHandler {
-	return &muxHandler{
+func NewMux() *mux {
+	return &mux{
 		handlers:    make(map[string]http.Handler),
 		handleFuncs: make(map[string]func(resp http.ResponseWriter, req *http.Request)),
 	}
 }
 
-func (mux *muxHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	// 分发请求
-	// 精确匹配
+func (mux *mux) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	urlPath := req.URL.Path
 	if hl, ok := mux.handlers[urlPath]; ok {
 		hl.ServeHTTP(resp, req)
@@ -26,15 +24,14 @@ func (mux *muxHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		fn(resp, req)
 		return
 	}
-
 	http.NotFound(resp, req)
 }
 
-func (mux *muxHandler) Handle(pattern string, handler http.Handler) {
+func (mux *mux) Handle(pattern string, handler http.Handler) {
 	mux.handlers[pattern] = handler
 }
 
-func (mux *muxHandler) HandleFunc(pattern string, fn func(resp http.ResponseWriter,
+func (mux *mux) HandleFunc(pattern string, fn func(resp http.ResponseWriter,
 	req *http.Request)) {
 	mux.handleFuncs[pattern] = fn
 }
