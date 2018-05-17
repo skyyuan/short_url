@@ -16,15 +16,12 @@ func init() {
 }
 
 func main() {
-
+	router()
 }
 
-func myRouter() {
+func router() {
 	router := mux.NewMux()
 	router.Handle("/hello/golang/", &BaseHandler{})
-	router.HandleFunc("/hello/world", func(resp http.ResponseWriter, req *http.Request) {
-		resp.Write([]byte("Hello World"))
-	})
 	log.Println("ShortURL server will start at port " + port)
 	log.Fatalln(http.ListenAndServe(port, router))
 }
