@@ -42,7 +42,7 @@ func TestMDB(t *testing.T) {
 
 func TestUrl_GenId(t *testing.T) {
 	url := &Url{}
-	url.SourceUrl = "http://www.facebook_2.com"
+	url.SourceUrl = "http://www.facebook_3.com"
 	err := url.GenId()
 	assert.Nil(t, err)
 

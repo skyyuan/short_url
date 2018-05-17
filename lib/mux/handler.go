@@ -14,6 +14,15 @@ func NewMux() *mux {
 	}
 }
 
+func (mux *mux) Handle(pattern string, handler http.Handler) {
+	mux.handlers[pattern] = handler
+}
+
+func (mux *mux) HandleFunc(pattern string, fn func(resp http.ResponseWriter,
+	req *http.Request)) {
+	mux.handleFuncs[pattern] = fn
+}
+
 func (mux *mux) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 	urlPath := req.URL.Path
 	if hl, ok := mux.handlers[urlPath]; ok {
@@ -25,13 +34,4 @@ func (mux *mux) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
 		return
 	}
 	http.NotFound(resp, req)
-}
-
-func (mux *mux) Handle(pattern string, handler http.Handler) {
-	mux.handlers[pattern] = handler
-}
-
-func (mux *mux) HandleFunc(pattern string, fn func(resp http.ResponseWriter,
-	req *http.Request)) {
-	mux.handleFuncs[pattern] = fn
 }

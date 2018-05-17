@@ -4,8 +4,8 @@ import (
 	"flag"
 	"log"
 	"net/http"
-	"fmt"
 	"short_url/lib/mux"
+	"short_url/controllers"
 )
 
 var port string
@@ -21,17 +21,8 @@ func main() {
 
 func router() {
 	router := mux.NewMux()
-	router.Handle("/hello/golang/", &BaseHandler{})
+	router.Handle("/", &controllers.BaseController{})
+	router.Handle("/api/url", &controllers.UrlController{})
 	log.Println("ShortURL server will start at port " + port)
 	log.Fatalln(http.ListenAndServe(port, router))
-}
-
-type BaseHandler struct {
-}
-
-func (handler *BaseHandler) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
-	fmt.Println("url path => ", req.URL.Path)
-	fmt.Println("url param a => ", req.URL.Query().Get("a"))
-
-	resp.Write([]byte("Hello Golang"))
 }

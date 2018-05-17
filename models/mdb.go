@@ -2,7 +2,7 @@ package models
 
 import (
 	"gopkg.in/mgo.v2"
-	"github.com/astaxie/beego"
+	"short_url/conf"
 )
 
 var (
@@ -13,10 +13,16 @@ func GetDB() *mgo.Database {
 	if db != nil {
 		return db
 	}
-	session, err := mgo.Dial(beego.AppConfig.String("mongo_url"))
+	url, err1 := conf.Read("mongo_url")
+	database, err2 := conf.Read("mongo_database")
+	if err1 != nil || err2 != nil {
+		panic(err1)
+		panic(err2)
+	}
+	session, err := mgo.Dial(url)
 	if err != nil {
 		panic(err)
 	}
-	db = session.DB(beego.AppConfig.String("mongo_database"))
+	db = session.DB(database)
 	return db
 }

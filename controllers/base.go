@@ -1,27 +1,21 @@
 package controllers
 
-import "github.com/astaxie/beego"
+import (
+	"net/http"
+	"html/template"
+	"os"
+)
 
 type BaseController struct {
-	beego.Controller
 }
 
-func (b *BaseController) output(res string) {
-	b.Ctx.WriteString(res)
-}
-
-func (b *BaseController) success(res interface{}) {
-	b.Data["json"] = map[string]interface{}{
-		"success": true,
-		"result":  res,
+func (b *BaseController) ServeHTTP(resp http.ResponseWriter, req *http.Request) {
+	t := template.New("index template")
+	t, err := t.ParseFiles("views/index.html")
+	if err != nil {
+		panic(err)
 	}
-	b.ServeJSON()
-}
-
-func (b *BaseController) error(errorMsg string) {
-	b.Data["json"] = map[string]interface{}{
-		"success": true,
-		"result":  errorMsg,
-	}
-	b.ServeJSON()
+	t.Execute(os.Stdout, "Hello")
+	//resp.Header().Set("Location", "http://www.baidu.com")
+	//resp.WriteHeader(302)
 }
